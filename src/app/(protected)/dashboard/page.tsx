@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { MeResponse } from "@/types";
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -16,7 +15,6 @@ export default async function DashboardPage() {
   if (res.status === 401) redirect("/login");
   const text = await res.text();
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 200)}`);
-
   const data = JSON.parse(text);
 
   return (
