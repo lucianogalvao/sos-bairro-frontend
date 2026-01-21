@@ -60,3 +60,11 @@ textarea:focus,
 button:focus {
   outline: none;
 }
+
+html[data-theme="dark"] {
+  --app-bg-gradient: linear-gradient(180deg, #050b18, #0b1a33);
+}
+
+html[data-theme="light"] {
+  --app-bg-gradient: linear-gradient(180deg, #f8fafc, #e2e8f0);
+}

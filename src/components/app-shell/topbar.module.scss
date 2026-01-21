@@ -1,5 +1,5 @@
 .appBar {
-  background: rgba(5, 11, 24, 0.95);
+  background: var(--app-bg-gradient);
   backdrop-filter: blur(8px);
 }
 

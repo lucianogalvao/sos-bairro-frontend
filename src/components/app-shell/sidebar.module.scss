@@ -2,7 +2,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #050b18, #0b1a33);
+  background: var(--app-bg-gradient);
   color: #fff;
 }
 
@@ -36,11 +36,6 @@
 .itemIcon {
   min-width: 44px;
   color: rgba(255, 255, 255, 0.9);
-}
-
-.divider {
-  margin: 12px 10px;
-  opacity: 0.2;
 }
 
 .footer {
