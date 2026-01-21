@@ -8,6 +8,7 @@ const PROTECTED_PREFIXES = ["/dashboard", "/occurrences", "/users", "/perfil"];
 const GUEST_ONLY_PREFIXES = ["/login", "/register"];
 
 export function proxy(req: NextRequest) {
+  console.log("[MW] hit:", req.nextUrl.pathname);
   const { pathname } = req.nextUrl;
 
   const token = req.cookies.get(COOKIE_NAME)?.value;
