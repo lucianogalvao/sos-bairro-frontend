@@ -9,7 +9,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider,
   IconButton,
   Tooltip,
 } from "@mui/material";
@@ -118,6 +117,7 @@ export default function Sidebar({
               minWidth: 0,
               mr: expanded ? 1.25 : 0,
               justifyContent: "center",
+              cursor: "pointer",
             }}
           >
             {item.icon}
@@ -195,8 +195,6 @@ export default function Sidebar({
           })
           .map(renderItemButton)}
       </List>
-
-      <Divider className={styles.divider} sx={{ mt: "auto", opacity: 0.25 }} />
 
       <Box className={styles.footer} sx={{ pb: 1 }}>
         <List disablePadding sx={{ px: 1 }}>

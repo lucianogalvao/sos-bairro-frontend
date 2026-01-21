@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "@/app/styles/globals.scss";
 import { Montserrat } from "next/font/google";
 import { AppThemeProvider } from "./providers";
+import { QueryProvider } from "@/providers/QueryProvider";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "SOS Bairro",
@@ -16,15 +18,28 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700"],
 });
 
-export default function RootLayout({
+type Mode = "light" | "dark";
+
+async function getInitialModeFromCookie(): Promise<Mode> {
+  const value = (await cookies()).get("sos_mode")?.value;
+  return value === "light" || value === "dark" ? value : "dark";
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const initialMode = await getInitialModeFromCookie();
+
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-theme={initialMode}>
       <body className={montserrat.variable}>
-        <AppThemeProvider>{children}</AppThemeProvider>
+        <QueryProvider>
+          <AppThemeProvider initialMode={initialMode}>
+            {children}
+          </AppThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

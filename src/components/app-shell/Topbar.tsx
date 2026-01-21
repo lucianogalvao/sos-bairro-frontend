@@ -8,6 +8,9 @@ import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getInitials } from "@/shared/utils/getInitials";
 import Link from "next/link";
+import Brightness4RoundedIcon from "@mui/icons-material/Brightness4Rounded";
+import Brightness7RoundedIcon from "@mui/icons-material/Brightness7Rounded";
+import { useColorMode } from "@/app/providers";
 
 type Props = {
   drawerWidth: number;
@@ -17,19 +20,20 @@ type Props = {
 };
 
 export default function Topbar({
-  drawerWidth,
   isDesktop,
   onOpenMobile,
   onToggleDesktop,
 }: Props) {
   const user = useAuthStore((s) => s.user);
+  const { mode, toggleMode } = useColorMode();
+
   return (
     <AppBar
-      position="fixed"
+      color="transparent"
+      position="relative"
       className={styles.appBar}
       sx={{
-        width: { md: `calc(100% - ${drawerWidth}px)` },
-        ml: { md: `${drawerWidth}px` },
+        width: "100%",
       }}
     >
       <Toolbar>
@@ -54,6 +58,13 @@ export default function Topbar({
           </Stack>
 
           <Box className={styles.user}>
+            <IconButton onClick={toggleMode} sx={{ mr: 1 }}>
+              {mode === "dark" ? (
+                <Brightness7RoundedIcon />
+              ) : (
+                <Brightness4RoundedIcon />
+              )}
+            </IconButton>
             <Link href="/perfil" style={{ textDecoration: "none" }}>
               <Avatar>{user ? getInitials(user.name) : ""}</Avatar>
             </Link>

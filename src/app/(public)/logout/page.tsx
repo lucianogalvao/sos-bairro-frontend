@@ -14,7 +14,10 @@ export default function LogoutPage() {
 
     (async () => {
       try {
-        await fetch("/api/auth/logout", { method: "POST" });
+        await fetch("/api/auth/logout", {
+          method: "POST",
+          credentials: "include",
+        });
 
         await new Promise((resolve) => setTimeout(resolve, 1500));
       } finally {

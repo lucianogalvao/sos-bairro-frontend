@@ -1,91 +1,82 @@
 "use client";
 
-import { ReactNode, useMemo, useState } from "react";
-import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
-import { ptBR } from "@mui/material/locale";
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
+import { getAppTheme, type AppMode } from "@/theme/getAppTheme";
+
 type Props = {
   children: ReactNode;
+  initialMode: AppMode;
 };
 
-export function AppThemeProvider({ children }: Props) {
-  const [mode] = useState<"light" | "dark">("dark");
+type ColorModeContextValue = {
+  mode: AppMode;
+  toggleMode: () => void;
+  setMode: (mode: AppMode) => void;
+};
 
-  const theme = useMemo(
-    () =>
-      createTheme(
-        {
-          palette: {
-            mode,
-            primary: {
-              main: "#2563EB",
-              light: "#60A5FA",
-              dark: "#1E40AF",
-              contrastText: "#FFFFFF",
-            },
-            secondary: {
-              main: "#10B981",
-              light: "#6EE7B7",
-              dark: "#047857",
-              contrastText: "#022C22",
-            },
-            error: { main: "#EF4444" },
-            warning: { main: "#F59E0B" },
-            success: { main: "#22C55E" },
-            background: {
-              default: mode === "dark" ? "#0F172A" : "#F8FAFC",
-              paper: mode === "dark" ? "#020617" : "#FFFFFF",
-            },
-            text: {
-              primary: mode === "dark" ? "#E5E7EB" : "#020617",
-              secondary: mode === "dark" ? "#9CA3AF" : "#475569",
-            },
-          },
-          typography: {
-            fontFamily: "var(--font-montserrat)",
-            h1: { fontWeight: 700 },
-            h2: { fontWeight: 700 },
-            h3: { fontWeight: 600 },
-            h4: { fontWeight: 600 },
-            h5: { fontWeight: 600 },
-            h6: { fontWeight: 600 },
-            button: { fontWeight: 600, textTransform: "none" },
-          },
-          shape: { borderRadius: 12 },
-          components: {
-            MuiLink: {
-              styleOverrides: {
-                root: {
-                  textDecoration: "none",
-                  "&:hover": { textDecoration: "none" },
-                  "&:focus-visible": { textDecoration: "none" },
-                },
-              },
-            },
-            MuiButton: { styleOverrides: { root: { borderRadius: 12 } } },
-            MuiTextField: { defaultProps: { variant: "outlined" } },
-            MuiPaper: { styleOverrides: { root: { backgroundImage: "none" } } },
-            MuiAppBar: {
-              styleOverrides: {
-                root: {
-                  boxShadow: "none",
-                  borderBottom: "1px solid rgba(255,255,255,0.08)",
-                },
-              },
-            },
-          },
-        },
-        ptBR
-      ),
-    [mode]
+const ColorModeContext = createContext<ColorModeContextValue | null>(null);
+
+export function useColorMode() {
+  const ctx = useContext(ColorModeContext);
+  if (!ctx) {
+    throw new Error("useColorMode must be used within AppThemeProvider");
+  }
+  return ctx;
+}
+
+function persistMode(mode: AppMode) {
+  document.documentElement.dataset.theme = mode;
+  document.cookie = `sos_mode=${mode}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  try {
+    localStorage.setItem("sos_mode", mode);
+  } catch {}
+}
+
+export function AppThemeProvider({ children, initialMode }: Props) {
+  const [mode, setModeState] = useState<AppMode>(initialMode);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = mode;
+  }, [mode]);
+
+  const setMode = useCallback((next: AppMode) => {
+    setModeState(next);
+    persistMode(next);
+  }, []);
+
+  const toggleMode = useCallback(() => {
+    setModeState((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      persistMode(next);
+      return next;
+    });
+  }, []);
+
+  const theme = useMemo(() => getAppTheme(mode), [mode]);
+
+  const value = useMemo(
+    () => ({ mode, toggleMode, setMode }),
+    [mode, toggleMode, setMode],
   );
 
   return (
     <AppRouterCacheProvider options={{ key: "mui" }}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
+      <ColorModeContext.Provider value={value}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
+      </ColorModeContext.Provider>
     </AppRouterCacheProvider>
   );
 }
