@@ -35,8 +35,20 @@ export function RegisterForm() {
   }
 
   return (
-    <Box component="form" action={onSubmit} display="grid" gap={2.25}>
-      <Typography color="text.secondary" textAlign={"center"}>
+    <Box
+      component="form"
+      action={onSubmit}
+      display="grid"
+      gap={{ xs: 1.5, sm: 2, md: 2.25 }}
+      maxWidth={420}
+      width="100%"
+      mx="auto"
+    >
+      <Typography
+        color="text.secondary"
+        textAlign="center"
+        fontSize={{ xs: 12.5, sm: 13.5, md: 14 }}
+      >
         Crie sua conta para registrar e acompanhar ocorrências.
       </Typography>
 
@@ -57,12 +69,20 @@ export function RegisterForm() {
         variant="contained"
         size="large"
         disabled={loading}
-        sx={{ mt: 1, py: 1.4 }}
+        sx={{
+          mt: 1,
+          py: { xs: 1, sm: 1.2, md: 1.4 },
+          fontSize: { xs: 14, sm: 14.5, md: 15 },
+        }}
       >
         {loading ? "Criando..." : "Registrar"}
       </Button>
 
-      <Typography color="text.secondary" fontSize={14} textAlign="center">
+      <Typography
+        color="text.secondary"
+        fontSize={{ xs: 12.5, sm: 13.5, md: 14 }}
+        textAlign="center"
+      >
         Já tem conta?{" "}
         <Link component={NextLink} href="/login" underline="hover">
           Entrar

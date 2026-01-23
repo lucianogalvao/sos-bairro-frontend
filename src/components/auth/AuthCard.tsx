@@ -14,28 +14,26 @@ export function AuthCard({ children }: Props) {
       elevation={0}
       sx={{
         width: "100%",
-        maxWidth: 560,
-        p: 6,
-        borderRadius: 4,
+        maxWidth: { xs: "100%", sm: 420, md: 560 },
+        p: { xs: 3, sm: 4, md: 4, nb: 4 },
+        mx: { xs: 2, sm: "auto" },
+        borderRadius: { xs: 3, md: 4 },
         background: "rgba(2, 6, 23, 0.85)",
         border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 30px 80px rgba(0,0,0,0.45)",
+        boxShadow: {
+          xs: "0 12px 32px rgba(0,0,0,0.35)",
+          md: "0 30px 80px rgba(0,0,0,0.45)",
+        },
       }}
     >
       <Box
         display="flex"
         alignItems="center"
-        gap={2}
-        mb={4}
+        gap={{ xs: 1.5, md: 2 }}
+        mb={{ xs: 2.5, md: 4 }}
         justifyContent="center"
       >
-        <Image
-          src={logo}
-          alt="SOS Bairro"
-          width={logo.width}
-          height={logo.height}
-          priority
-        />
+        <Image src={logo} alt="SOS Bairro" width={160} height={48} priority />
       </Box>
 
       {children}

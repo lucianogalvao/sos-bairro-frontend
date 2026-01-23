@@ -1,4 +1,4 @@
-import { Box, CircularProgress, useTheme } from "@mui/material";
+import { Box, CircularProgress, useMediaQuery, useTheme } from "@mui/material";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useMemo } from "react";
 import { Overview } from "../types";
@@ -13,18 +13,22 @@ type Props = {
 
 export default function StatusChart({ occurrences, isLoading }: Props) {
   const theme = useTheme();
-  const settings = useMemo(
-    () => ({
+  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMdDown = useMediaQuery(theme.breakpoints.down("md"));
+  const isNotebook = useMediaQuery(theme.breakpoints.down("nb"));
+
+  const settings = useMemo(() => {
+    const size = isSmDown ? 120 : isMdDown ? 135 : isNotebook ? 145 : 180;
+    return {
       margin: { right: 5 },
-      width: 200,
-      height: 200,
+      width: size,
+      height: size,
       hideLegend: true,
-    }),
-    [],
-  );
+    };
+  }, [isSmDown, isMdDown, isNotebook]);
 
   const chartData = mapStatusToChartData(occurrences.byStatus);
-  const mh = 380;
+  const mh = isSmDown ? 210 : isMdDown ? 230 : isNotebook ? 250 : 280;
 
   return (
     <Box
@@ -33,6 +37,10 @@ export default function StatusChart({ occurrences, isLoading }: Props) {
       minHeight={mh}
       sx={{
         background: theme.palette.background.paper,
+        padding: 3.5,
+        [theme.breakpoints.down("nb")]: {
+          padding: 2.5,
+        },
       }}
     >
       {(isLoading && (
@@ -76,7 +84,7 @@ export default function StatusChart({ occurrences, isLoading }: Props) {
                   pieArc: {
                     style: {
                       stroke: theme.palette.background.paper,
-                      strokeWidth: 10,
+                      strokeWidth: 6,
                     },
                   },
                 }}

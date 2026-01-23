@@ -19,6 +19,7 @@ import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 
 import styles from "./sidebar.module.scss";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -183,6 +184,18 @@ export default function Sidebar({
               <MenuRoundedIcon sx={{ fontSize: ICON_SIZE }} />
             </IconButton>
           </Tooltip>
+        )}
+        {variant === "temporary" && (
+          <IconButton
+            onClick={onCloseMobile}
+            className={styles.toggleBtn}
+            sx={{
+              width: 44,
+              height: 44,
+            }}
+          >
+            <CloseIcon sx={{ fontSize: ICON_SIZE }} />
+          </IconButton>
         )}
       </Box>
 

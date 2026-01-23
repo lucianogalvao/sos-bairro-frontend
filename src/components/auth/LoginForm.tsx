@@ -52,35 +52,85 @@ export function LoginForm() {
   }
 
   return (
-    <Box component="form" action={onSubmit} display="grid" gap={2.25}>
-      <Typography color="text.secondary" textAlign="center">
+    <Box
+      component="form"
+      action={onSubmit}
+      display="grid"
+      gap={{ xs: 1.25, sm: 2 }}
+      sx={{
+        width: "100%",
+        maxWidth: { xs: 360, sm: 380, md: 400 },
+        mx: "auto",
+        px: 0.5,
+      }}
+    >
+      <Typography
+        color="text.secondary"
+        textAlign="center"
+        sx={{
+          fontSize: { xs: 12.5, sm: 13, md: 14 },
+          lineHeight: { xs: 1.25, sm: 1.35 },
+          px: 0.5,
+          margin: "auto",
+          maxWidth: { xs: 250, sm: "100%" },
+        }}
+      >
         Entre com seu e-mail e senha para acessar o sistema.
       </Typography>
 
-      {error && <Alert severity="error">{error}</Alert>}
+      {error && (
+        <Alert severity="error">
+          Algo deu errado, verifique seus dados e tente novamente.
+        </Alert>
+      )}
 
-      <TextField name="email" label="Email" type="email" required fullWidth />
+      <TextField
+        name="email"
+        label="Email"
+        type="email"
+        required
+        fullWidth
+        autoComplete="email"
+        inputProps={{ inputMode: "email" }}
+        size="small"
+      />
       <TextField
         name="password"
         label="Senha"
         type="password"
         required
         fullWidth
+        autoComplete="current-password"
+        size="small"
       />
 
       <Button
         type="submit"
         variant="contained"
-        size="large"
+        size="medium"
         disabled={loading}
-        sx={{ mt: 1, py: 1.4 }}
+        sx={{
+          mt: { xs: 0.5, sm: 1 },
+          py: { xs: 1, sm: 1.25 },
+          fontSize: { xs: 13.5, sm: 15 },
+          minHeight: 44,
+        }}
       >
         {loading ? "Entrando..." : "Entrar"}
       </Button>
 
-      <Typography color="text.secondary" fontSize={14} textAlign="center">
+      <Typography
+        color="text.secondary"
+        textAlign="center"
+        sx={{ fontSize: { xs: 12, sm: 13.5 } }}
+      >
         Não tem conta?{" "}
-        <Link component={NextLink} href="/register" underline="hover">
+        <Link
+          component={NextLink}
+          href="/register"
+          underline="hover"
+          sx={{ fontWeight: 600 }}
+        >
           Criar agora
         </Link>
       </Typography>

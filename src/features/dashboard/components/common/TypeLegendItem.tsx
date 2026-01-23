@@ -21,25 +21,43 @@ export default function TypeLegendItem({ color, label, value }: Props) {
       <Dot color={color} />
 
       <Typography
-        variant="h5"
         component="span"
-        sx={{ whiteSpace: "nowrap", ml: 2 }}
+        sx={{
+          whiteSpace: "nowrap",
+          ml: 2,
+          fontWeight: 600,
+          fontSize: {
+            xs: "0.75rem",
+            sm: "0.8rem",
+            notebook: "0.85rem",
+            lg: "0.95rem",
+          },
+        }}
       >
         {label
-          ? "REGISTRADA" === label
+          ? label === "REGISTRADA"
             ? "Registradas"
-            : "EM ANALISE" === label
+            : label === "EM ANALISE"
               ? "Em Análise"
-              : "RESOLVIDA" === label
+              : label === "RESOLVIDA"
                 ? "Resolvidas"
                 : label
           : ""}
       </Typography>
 
       <Typography
-        variant="h5"
         component="span"
-        sx={{ whiteSpace: "nowrap", ml: 1 }}
+        sx={{
+          whiteSpace: "nowrap",
+          ml: 1,
+          fontWeight: 700,
+          fontSize: {
+            xs: "0.85rem",
+            sm: "0.95rem",
+            notebook: "1rem",
+            lg: "1.1rem",
+          },
+        }}
       >
         {value}
       </Typography>

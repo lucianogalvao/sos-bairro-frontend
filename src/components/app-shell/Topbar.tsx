@@ -1,6 +1,14 @@
 "use client";
 
-import { AppBar, Toolbar, IconButton, Avatar, Box, Stack } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Avatar,
+  Box,
+  Stack,
+  useTheme,
+} from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import styles from "./topbar.module.scss";
 import logo from "@/assets/sos-logo.png";
@@ -26,6 +34,7 @@ export default function Topbar({
 }: Props) {
   const user = useAuthStore((s) => s.user);
   const { mode, toggleMode } = useColorMode();
+  const theme = useTheme();
 
   return (
     <AppBar
@@ -43,7 +52,15 @@ export default function Topbar({
           alignItems="center"
           width="100%"
         >
-          <Stack>
+          <Stack
+            sx={{
+              [theme.breakpoints.down("md")]: {
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 2,
+              },
+            }}
+          >
             {!isDesktop && (
               <IconButton
                 edge="start"

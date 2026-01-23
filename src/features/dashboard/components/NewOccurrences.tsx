@@ -12,6 +12,7 @@ import {
   TableSortLabel,
   Tooltip,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import React from "react";
@@ -27,6 +28,8 @@ type Props = {
 
 export default function NewOccurrences({ occurrences, isLoading }: Props) {
   const theme = useTheme();
+  const isNotebook = useMediaQuery("(max-width:1440px)");
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [orderBy, setOrderBy] = React.useState<SortKey>("createdAt");
   const [order, setOrder] = React.useState<Order>("desc");
   const limit = 10;
@@ -44,24 +47,51 @@ export default function NewOccurrences({ occurrences, isLoading }: Props) {
   }
   return (
     <Box
-      padding={3.5}
       borderRadius={0.5}
       width={"100%"}
-      height="100%"
+      height={"100%"}
       sx={{
         background: theme.palette.background.paper,
+        display: "flex",
+        flexDirection: "column",
+        p: { xs: 2, sm: 3, md: 3.5 },
       }}
     >
       <TitleSlash title="Novas Ocorrências" />
-      <TableContainer sx={{ mt: 2, height: "100%" }}>
+      <TableContainer
+        sx={{
+          mt: { xs: 1.5, md: 2 },
+          flex: 1,
+          minHeight: 0,
+          overflowX: "auto",
+          [theme.breakpoints.down("md")]: {
+            maxHeight: "100%",
+            minHeight: "unset",
+            flex: "unset",
+          },
+        }}
+      >
         <Table
           size="small"
           aria-label="novas ocorrências"
-          sx={{ tableLayout: "fixed", width: "100%" }}
+          sx={{
+            tableLayout: "fixed",
+            width: "100%",
+            minWidth: isMobile ? 520 : isNotebook ? 600 : 640,
+            [theme.breakpoints.down("md")]: {
+              minWidth: "100%",
+            },
+          }}
         >
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 700, width: "30%" }}>
+              <TableCell
+                sx={{
+                  fontWeight: 700,
+                  width: isMobile ? "50%" : "30%",
+                  fontSize: { xs: 12, sm: 13, md: 14 },
+                }}
+              >
                 <TableSortLabel
                   active={orderBy === "description"}
                   direction={orderBy === "description" ? order : "asc"}
@@ -71,18 +101,31 @@ export default function NewOccurrences({ occurrences, isLoading }: Props) {
                 </TableSortLabel>
               </TableCell>
 
-              <TableCell sx={{ fontWeight: 700, width: "30%" }}>
-                <TableSortLabel
-                  active={orderBy === "category"}
-                  direction={orderBy === "category" ? order : "asc"}
-                  onClick={() => handleRequestSort("category")}
+              {!isMobile && (
+                <TableCell
+                  sx={{
+                    fontWeight: 700,
+                    width: "30%",
+                    fontSize: { xs: 12, sm: 13, md: 14 },
+                  }}
                 >
-                  Categoria
-                </TableSortLabel>
-              </TableCell>
+                  <TableSortLabel
+                    active={orderBy === "category"}
+                    direction={orderBy === "category" ? order : "asc"}
+                    onClick={() => handleRequestSort("category")}
+                  >
+                    Categoria
+                  </TableSortLabel>
+                </TableCell>
+              )}
 
               <TableCell
-                sx={{ fontWeight: 700, width: "15%", whiteSpace: "nowrap" }}
+                sx={{
+                  fontWeight: 700,
+                  width: isMobile ? "20%" : "15%",
+                  whiteSpace: "nowrap",
+                  fontSize: { xs: 12, sm: 13, md: 14 },
+                }}
               >
                 <TableSortLabel
                   active={orderBy === "createdAt"}
@@ -93,7 +136,13 @@ export default function NewOccurrences({ occurrences, isLoading }: Props) {
                 </TableSortLabel>
               </TableCell>
 
-              <TableCell sx={{ fontWeight: 700, width: "15%" }}>
+              <TableCell
+                sx={{
+                  fontWeight: 700,
+                  width: isMobile ? "30%" : "15%",
+                  fontSize: { xs: 12, sm: 13, md: 14 },
+                }}
+              >
                 <TableSortLabel
                   active={orderBy === "status"}
                   direction={orderBy === "status" ? order : "asc"}
@@ -118,56 +167,77 @@ export default function NewOccurrences({ occurrences, isLoading }: Props) {
               >
                 <TableCell
                   sx={{
-                    width: "30%",
+                    width: isMobile ? "60%" : "30%",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
+                    fontSize: { xs: 12, sm: 13, md: 14 },
+                    pr: { xs: 1, md: 2 },
                   }}
                 >
                   <Tooltip title={row.description} placement="top" arrow>
-                    <Typography noWrap>{row.description}</Typography>
-                  </Tooltip>
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    width: "30%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Tooltip
-                    title={row.category?.title ?? "-"}
-                    placement="top"
-                    arrow
-                  >
-                    <Typography noWrap>
-                      {row.category?.title ? row.category.title : "-"}
+                    <Typography noWrap fontSize="inherit">
+                      {row.description}
                     </Typography>
                   </Tooltip>
                 </TableCell>
 
-                <TableCell sx={{ width: "15%", whiteSpace: "nowrap" }}>
+                {!isMobile && (
+                  <TableCell
+                    sx={{
+                      width: "30%",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      fontSize: { xs: 12, sm: 13, md: 14 },
+                    }}
+                  >
+                    <Tooltip
+                      title={row.category?.title ?? "-"}
+                      placement="top"
+                      arrow
+                    >
+                      <Typography noWrap fontSize="inherit">
+                        {row.category?.title ? row.category.title : "-"}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                )}
+
+                <TableCell
+                  sx={{
+                    width: isMobile ? "20%" : "15%",
+                    whiteSpace: "nowrap",
+                    fontSize: { xs: 12, sm: 13, md: 14 },
+                  }}
+                >
                   {formatDatePtBR(row.createdAt)}
                 </TableCell>
 
-                <TableCell sx={{ width: "15%" }}>
+                <TableCell
+                  sx={{
+                    width: isMobile ? "20%" : "15%",
+                    fontSize: { xs: 12, sm: 13, md: 14 },
+                  }}
+                >
                   <Tooltip
                     title={row.status.replaceAll("_", " ")}
                     placement="top"
                     arrow
                   >
                     <Chip
-                      size="small"
+                      size={isNotebook ? "small" : "medium"}
                       label={row.status.replaceAll("_", " ")}
                       color={statusChipColor(row.status)}
                       variant="filled"
                       sx={{
                         maxWidth: "100%",
+                        height: isNotebook ? 24 : 28,
                         ".MuiChip-label": {
                           overflow: "hidden",
                           textOverflow: "ellipsis",
+                          fontSize: { xs: 11, sm: 12, md: 13 },
+                          px: 1,
                         },
                       }}
                     />
@@ -178,7 +248,7 @@ export default function NewOccurrences({ occurrences, isLoading }: Props) {
 
             {!isLoading && rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={isMobile ? 3 : 4}>
                   <Typography color="text.secondary">
                     Nenhuma ocorrência encontrada.
                   </Typography>

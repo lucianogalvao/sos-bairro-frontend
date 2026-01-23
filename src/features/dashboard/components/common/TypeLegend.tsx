@@ -1,6 +1,6 @@
 "use client";
 
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { PieItem } from "../../types";
 import TypeLegendItem from "./TypeLegendItem";
 
@@ -9,6 +9,7 @@ type Props = {
 };
 
 export default function TypeLegend({ items }: Props) {
+  const theme = useTheme();
   return (
     <Box
       display="flex"
@@ -16,6 +17,12 @@ export default function TypeLegend({ items }: Props) {
       alignItems="center"
       justifyContent="center"
       mt={4}
+      sx={{
+        [theme.breakpoints.down("md")]: {
+          flexDirection: "column",
+          gap: 2,
+        },
+      }}
     >
       {items.map((item) => (
         <TypeLegendItem

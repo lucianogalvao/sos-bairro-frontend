@@ -14,7 +14,7 @@ function useMounted() {
   return useSyncExternalStore(
     () => () => {},
     () => true,
-    () => false
+    () => false,
   );
 }
 
@@ -38,7 +38,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar
         variant={effectiveIsMobile ? "temporary" : "permanent"}
         drawerWidth={drawerWidth}
-        expanded={!effectiveIsMobile && desktopExpanded}
+        expanded={desktopExpanded || mobileOpen}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
         onToggleDesktop={() => setDesktopExpanded((v) => !v)}

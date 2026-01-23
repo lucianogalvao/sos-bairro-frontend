@@ -1,6 +1,8 @@
 .newOccurrenceLink {
   text-decoration: none;
   display: flex;
+  width: fit-content;
+  max-width: 300px;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -10,7 +12,28 @@
   cursor: pointer;
   background-color: #1d4ed8;
   transition: background-color 0.3s ease;
+  span {
+    font-weight: 700;
+    font-size: 16px;
+  }
   &:hover {
     background-color: #2563eb;
+  }
+}
+
+@media (max-width: 1440px) {
+  .newOccurrenceLink {
+    padding: 10px;
+    span {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .newOccurrenceLink {
+    width: 100%;
+    justify-content: center;
+    max-width: 100%;
   }
 }

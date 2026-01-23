@@ -3,3 +3,21 @@
   margin: 0 auto;
   padding: 50px;
 }
+
+@media (max-width: 1440px) {
+  .container {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 16px;
+  }
+}
