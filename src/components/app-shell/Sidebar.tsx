@@ -44,13 +44,13 @@ const navItems = [
     roles: ["ADMIN", "MODERADOR", "MORADOR"],
   },
   {
-    href: "/occurrences",
+    href: "/ocorrencias",
     label: "Ocorrências",
     icon: <ReportRoundedIcon sx={{ fontSize: ICON_SIZE }} />,
     roles: ["ADMIN", "MODERADOR", "MORADOR"],
   },
   {
-    href: "/users",
+    href: "/usuarios",
     label: "Usuários",
     icon: <PeopleAltRoundedIcon sx={{ fontSize: ICON_SIZE }} />,
     roles: ["ADMIN", "MODERADOR"],

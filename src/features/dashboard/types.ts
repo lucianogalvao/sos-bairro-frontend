@@ -58,4 +58,17 @@ export type Occurrence = {
 export type PieItem = { label: string; value: number; color: string };
 
 export type Order = "asc" | "desc";
-export type SortKey = "description" | "category" | "createdAt" | "status";
+export type SortKey =
+  | "description"
+  | "category"
+  | "status"
+  | "createdAt"
+  | "risk"
+  | "user";
+
+export type ListMeta = {
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+};
