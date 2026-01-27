@@ -53,6 +53,8 @@ export type Occurrence = {
   category: OccurrenceCategory;
   resident: UserSummary;
   moderator: UserSummary | null;
+
+  address?: string;
 };
 
 export type PieItem = { label: string; value: number; color: string };

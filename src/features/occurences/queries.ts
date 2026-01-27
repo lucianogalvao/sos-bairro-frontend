@@ -1,4 +1,5 @@
-import { fetchOccurrences } from "@/shared/api/occurrences";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchOccurrences, deleteOccurrence } from "@/shared/api/occurrences";
 import { fetchCategories } from "@/shared/api/categories";
 
 export const occurrencesQueries = {
@@ -14,3 +15,16 @@ export const categoriesQueries = {
     queryFn: fetchCategories,
   }),
 };
+
+export function useDeleteOccurrence() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => deleteOccurrence(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: occurrencesQueries.occurrences().queryKey,
+      });
+    },
+  });
+}

@@ -19,6 +19,7 @@ import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import RoomOutlinedIcon from "@mui/icons-material/RoomOutlined";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import formatDatePtBR from "@/shared/utils/formatDatePtBR";
 import {
   buildGoogleMapsEmbedUrl,
@@ -27,6 +28,7 @@ import {
 import normalizeStatusLabel from "@/shared/utils/normalizeStatusLabel";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useDeleteOccurrence } from "../queries";
 
 type Props = {
   detailsOpen: boolean;
@@ -63,6 +65,8 @@ export default function DialogDetails({
   const canModerate = user?.role === "ADMIN" || user?.role === "MODERADOR";
 
   const [actionError, setActionError] = React.useState<string | null>(null);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const patchStatusMutation = useMutation({
@@ -101,6 +105,9 @@ export default function DialogDetails({
       setActionError(e instanceof Error ? e.message : "Erro ao alterar status");
     },
   });
+
+  const deleteOccurrenceMutation = useDeleteOccurrence();
+  const canDelete = user?.role === "ADMIN" || user?.role === "MODERADOR";
 
   const isBusy = patchStatusMutation.isPending;
 
@@ -174,31 +181,45 @@ export default function DialogDetails({
           </Typography>
         ) : (
           <Stack spacing={1.2}>
-            <Typography fontWeight={900}>{selected.description}</Typography>
+            {selected.description && (
+              <Typography fontWeight={900}>{selected.description}</Typography>
+            )}
 
-            <Typography variant="body2">
-              <strong>Categoria:</strong> {selected.category?.title ?? "-"}
-            </Typography>
+            {selected.category.title && (
+              <Typography variant="subtitle2" color="text.secondary">
+                {selected.category.title}
+              </Typography>
+            )}
 
-            <Typography variant="body2">
-              <strong>Status:</strong> {normalizeStatusLabel(selected.status)}
-            </Typography>
+            {selected.address && (
+              <Typography variant="body2">
+                <strong>Endereço:</strong> {selected.address}
+              </Typography>
+            )}
 
-            <Typography variant="body2">
-              <strong>Registrado por:</strong> {selected.resident?.name ?? "-"}
-            </Typography>
+            {selected.status && (
+              <Typography variant="body2">
+                <strong>Status:</strong> {normalizeStatusLabel(selected.status)}
+              </Typography>
+            )}
 
-            <Typography variant="body2">
-              <strong>Data:</strong> {formatDatePtBR(selected.createdAt)}
-            </Typography>
+            {selected.resident?.name && (
+              <Typography variant="body2">
+                <strong>Registrado por:</strong> {selected.resident?.name}
+              </Typography>
+            )}
 
-            {/* MAP + IMAGE */}
+            {selected.createdAt && (
+              <Typography variant="body2">
+                <strong>Data:</strong> {formatDatePtBR(selected.createdAt)}
+              </Typography>
+            )}
+
             <Stack
               direction={{ xs: "column", sm: "row" }}
               spacing={1.25}
               sx={{ mt: 1 }}
             >
-              {/* MAP */}
               <Box
                 sx={{
                   flex: 1,
@@ -289,7 +310,6 @@ export default function DialogDetails({
                 )}
               </Box>
 
-              {/* IMAGE */}
               <Box
                 sx={{
                   flex: 1,
@@ -339,7 +359,6 @@ export default function DialogDetails({
               </Box>
             </Stack>
 
-            {/* ACTIONS (ADMIN/MOD) */}
             {canAdvance ? (
               <>
                 {actionError && (
@@ -348,11 +367,7 @@ export default function DialogDetails({
                   </Alert>
                 )}
 
-                <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  spacing={1.5}
-                  sx={{ mt: 1.5 }}
-                >
+                <Stack direction="column" spacing={1.5} sx={{ mt: 1.5 }}>
                   <Button
                     variant="contained"
                     color={nextStatus === "RESOLVIDA" ? "success" : "primary"}
@@ -387,6 +402,82 @@ export default function DialogDetails({
                   </Button>
                 </Stack>
               </>
+            ) : null}
+            {canDelete ? (
+              <Stack spacing={1}>
+                {!confirmDeleteOpen ? (
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    fullWidth
+                    disabled={deleteOccurrenceMutation.isPending}
+                    startIcon={<DeleteOutlineOutlinedIcon fontSize="small" />}
+                    onClick={() => {
+                      if (!selected) return;
+                      console.log("[DELETE][selected occurrence]", selected);
+                      setDeleteError(null);
+                      setConfirmDeleteOpen(true);
+                    }}
+                  >
+                    Deletar ocorrência
+                  </Button>
+                ) : (
+                  <Stack spacing={1}>
+                    {deleteError ? (
+                      <Alert severity="error">{deleteError}</Alert>
+                    ) : (
+                      <Alert severity="warning">
+                        Tem certeza que deseja deletar esta ocorrência?
+                      </Alert>
+                    )}
+
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        fullWidth
+                        disabled={deleteOccurrenceMutation.isPending}
+                        startIcon={
+                          deleteOccurrenceMutation.isPending ? (
+                            <CircularProgress size={18} color="inherit" />
+                          ) : undefined
+                        }
+                        onClick={async () => {
+                          if (!selected) return;
+                          try {
+                            setActionError(null);
+                            setDeleteError(null);
+                            await deleteOccurrenceMutation.mutateAsync(
+                              selected.id,
+                            );
+                            setConfirmDeleteOpen(false);
+                            closeDetails();
+                          } catch (e) {
+                            setDeleteError(
+                              e instanceof Error
+                                ? e.message
+                                : "Erro ao deletar ocorrência",
+                            );
+                          }
+                        }}
+                      >
+                        {deleteOccurrenceMutation.isPending
+                          ? "Deletando..."
+                          : "Confirmar"}
+                      </Button>
+
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        disabled={deleteOccurrenceMutation.isPending}
+                        onClick={() => setConfirmDeleteOpen(false)}
+                      >
+                        Cancelar
+                      </Button>
+                    </Stack>
+                  </Stack>
+                )}
+              </Stack>
             ) : null}
           </Stack>
         )}

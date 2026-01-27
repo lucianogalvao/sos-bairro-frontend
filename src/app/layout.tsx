@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 import { AppThemeProvider } from "./providers";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { cookies } from "next/headers";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "SOS Bairro",
@@ -31,10 +32,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const initialMode = await getInitialModeFromCookie();
-
+  const key = process.env.GOOGLE_MAPS_API_KEY;
   return (
     <html lang="pt-BR" data-theme={initialMode}>
       <body className={montserrat.variable}>
+        {key ? (
+          <Script
+            src={`https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&v=weekly`}
+            strategy="afterInteractive"
+          />
+        ) : null}
         <QueryProvider>
           <AppThemeProvider initialMode={initialMode}>
             {children}
