@@ -2,7 +2,7 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import List from "@mui/material/List";
@@ -41,14 +41,14 @@ export default function AddressAutocomplete({
 
   useEffect(() => {
     if (window.google?.maps?.places) {
-      setServices({
+      const newServices = {
         autocomplete: new window.google.maps.places.AutocompleteService(),
         places: new window.google.maps.places.PlacesService(
           document.createElement("div"),
         ),
-      });
+      };
+      setTimeout(() => setServices(newServices), 0);
       return;
-    }
 
     const interval = setInterval(() => {
       if (window.google?.maps?.places) {
