@@ -227,7 +227,7 @@ export default function LatestOccurrencesTable() {
                   <Chip
                     size="small"
                     label={row.status.replaceAll("_", " ")}
-                    color={statusChipColor(row.status)}
+                    color={statusChipColor(row.status as OccurrenceStatus)}
                     variant="filled"
                   />
                 </TableCell>
