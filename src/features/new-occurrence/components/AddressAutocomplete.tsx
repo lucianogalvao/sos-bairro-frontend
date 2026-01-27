@@ -41,14 +41,14 @@ export default function AddressAutocomplete({
 
   useEffect(() => {
     if (window.google?.maps?.places) {
-      const newServices = {
+      setServices({
         autocomplete: new window.google.maps.places.AutocompleteService(),
         places: new window.google.maps.places.PlacesService(
           document.createElement("div"),
         ),
-      };
-      setTimeout(() => setServices(newServices), 0);
+      });
       return;
+    }
 
     const interval = setInterval(() => {
       if (window.google?.maps?.places) {
