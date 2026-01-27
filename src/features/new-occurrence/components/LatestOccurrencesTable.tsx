@@ -20,6 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import { occurrencesQueries } from "@/features/occurences/queries"; // ajuste o path se for outro
 import formatDatePtBR from "@/shared/utils/formatDatePtBR";
 import statusChipColor from "@/shared/utils/statusChipColor";
+import { OccurrenceStatus } from "@/features/dashboard/types";
 
 // Ajuste se o seu type estiver em outro lugar:
 type Occurrence = {
@@ -189,7 +190,7 @@ export default function LatestOccurrencesTable() {
                       <Chip
                         size="small"
                         label={row.status.replaceAll("_", " ")}
-                        color={statusChipColor(row.status)}
+                        color={statusChipColor(row.status as OccurrenceStatus)}
                         variant="filled"
                       />
                     </Box>
