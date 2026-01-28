@@ -414,7 +414,6 @@ export default function DialogDetails({
                     startIcon={<DeleteOutlineOutlinedIcon fontSize="small" />}
                     onClick={() => {
                       if (!selected) return;
-                      console.log("[DELETE][selected occurrence]", selected);
                       setDeleteError(null);
                       setConfirmDeleteOpen(true);
                     }}

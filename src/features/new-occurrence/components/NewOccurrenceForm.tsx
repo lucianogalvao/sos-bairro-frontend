@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import AddressAutocomplete from "./AddressAutocomplete";
 import { categoriesQueries } from "@/features/occurences/queries";
 import { OccurrenceCategory } from "@/features/dashboard/types";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Geo = { lat: number; lng: number };
 
@@ -33,6 +33,7 @@ export default function NewOccurrenceForm() {
     ? categoriesQuery.data
     : categoriesQuery.data?.items;
   const categoriesSafe = Array.isArray(categories) ? categories : [];
+  const router = useRouter();
 
   React.useEffect(() => {
     if (!file) {
@@ -108,7 +109,7 @@ export default function NewOccurrenceForm() {
         throw new Error(msg);
       }
 
-      redirect("/dashboard");
+      router.push("/dashboard");
     } catch (e) {
       console.error("Erro ao salvar ocorrência:", e);
     }
@@ -154,7 +155,6 @@ export default function NewOccurrenceForm() {
 
         <AddressAutocomplete
           onPick={(data) => {
-            console.log("Escolhido:", data);
             setAddress(data.address);
             setGeo({
               lat: data.lat,

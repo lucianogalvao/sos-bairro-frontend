@@ -19,7 +19,6 @@ export default function DashboardClient() {
   const overview = useQuery(dashboardQueries.overview());
   const latest = useQuery(dashboardQueries.latest());
 
-  console.log(latest);
   const isLoading = overview.isLoading || latest.isLoading;
 
   if (isLoading)

@@ -19,7 +19,6 @@ export default function OccurrenceDeleteConfirmButton({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   function handleOpenConfirm() {
-    console.log("[DELETE][selected occurrence]", occurrence);
     setOpenConfirm(true);
   }
 

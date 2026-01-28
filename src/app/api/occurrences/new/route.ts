@@ -40,9 +40,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log(body);
-
-    console.log(`${apiBase}/occurrences`);
     const backendRes = await fetch(`${apiBase}/occurrences`, {
       method: "POST",
       headers: {
