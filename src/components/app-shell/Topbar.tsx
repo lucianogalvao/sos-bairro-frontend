@@ -83,7 +83,9 @@ export default function Topbar({
               )}
             </IconButton>
             <Link href="/perfil" style={{ textDecoration: "none" }}>
-              <Avatar>{user ? getInitials(user.name) : ""}</Avatar>
+              <Avatar src={user?.avatarUrl ?? undefined}>
+                {user ? getInitials(user.name) : ""}
+              </Avatar>
             </Link>
           </Box>
         </Box>
