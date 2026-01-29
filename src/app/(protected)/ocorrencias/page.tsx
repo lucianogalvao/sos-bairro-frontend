@@ -1,4 +1,4 @@
-import OccurrencesClient from "@/features/occurences/page";
+import OccurrencesClient from "@/features/occurences/client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

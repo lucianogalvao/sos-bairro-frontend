@@ -1,4 +1,4 @@
-import DashboardClient from "@/features/dashboard/page";
+import DashboardClient from "@/features/dashboard/client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
