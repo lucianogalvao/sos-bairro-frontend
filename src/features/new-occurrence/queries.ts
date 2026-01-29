@@ -12,10 +12,7 @@ type CreateOccurrencePayload = {
 };
 
 async function createOccurrence(payload: CreateOccurrencePayload) {
-  const apiBase = process.env.NEXT_PUBLIC_APP_URL;
-  if (!apiBase) throw new Error("NEXT_PUBLIC_APP_URL não configurada");
-
-  const res = await fetch(`${apiBase}/api/occurrences/new`, {
+  const res = await fetch("/api/occurrences/new", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",

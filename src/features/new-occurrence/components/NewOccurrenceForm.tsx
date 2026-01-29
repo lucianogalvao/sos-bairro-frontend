@@ -54,14 +54,7 @@ export default function NewOccurrenceForm() {
   }, [file]);
 
   async function onSubmit() {
-    const apiBase = process.env.NEXT_PUBLIC_APP_URL;
-
     setSubmitError(null);
-
-    if (!apiBase) {
-      setSubmitError("NEXT_PUBLIC_APP_URL não configurada");
-      return;
-    }
 
     if (!description || !categoryId) return;
 
@@ -105,7 +98,7 @@ export default function NewOccurrenceForm() {
         locationLongitude: geo.lng,
       };
 
-      const res = await fetch(`${apiBase}/api/occurrences/new`, {
+      const res = await fetch("/api/occurrences/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

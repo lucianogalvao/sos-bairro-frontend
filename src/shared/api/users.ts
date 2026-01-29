@@ -5,10 +5,7 @@ import { ApiErrorResponse, ProfileForm } from "./types";
 type UpdateUserRoleResponse = unknown;
 
 export async function fetchUsers() {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (!baseUrl) throw new Error("NEXT_PUBLIC_APP_URL não configurada");
-
-  const res = await fetch(`${baseUrl}/api/users`, {
+  const res = await fetch("/api/users", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -29,10 +26,7 @@ export async function updateUserRole(params: {
   id: number;
   nextRole: Role;
 }): Promise<UpdateUserRoleResponse> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (!baseUrl) throw new Error("NEXT_PUBLIC_APP_URL não configurada");
-
-  const res = await fetch(`${baseUrl}/api/users/${params.id}/role`, {
+  const res = await fetch(`/api/users/${params.id}/role`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
