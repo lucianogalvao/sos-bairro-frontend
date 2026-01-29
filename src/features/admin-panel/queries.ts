@@ -1,4 +1,4 @@
-import { fetchUsers, updateUserRole } from "@/shared/api/users";
+import { deleteUser, fetchUsers, updateUserRole } from "@/shared/api/users";
 import { Role } from "@/store/types";
 import { useQueryClient } from "node_modules/@tanstack/react-query/build/modern/QueryClientProvider";
 import { useMutation } from "node_modules/@tanstack/react-query/build/modern/useMutation";
@@ -63,6 +63,19 @@ export function useUpdateOccurrence() {
     mutationFn: (payload: UpdateOccurrencePayload) => updateOccurrence(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["occurrences"] });
+    },
+  });
+}
+
+export function useDeleteUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => deleteUser(id),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      // se você tiver "me" em tela e quiser garantir consistência:
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
 }

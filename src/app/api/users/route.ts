@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { env } from "@/shared/lib/env";
 
+async function safeJson(res: Response) {
+  try {
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get(env.cookieName)?.value;

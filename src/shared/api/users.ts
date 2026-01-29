@@ -133,3 +133,18 @@ export async function updateMe(payload: {
     },
   };
 }
+
+export async function deleteUser(id: number): Promise<void> {
+  const res = await fetch(`/api/users/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const data = await safeJson<ApiErrorResponse>(res);
+    throw new Error(data?.message ?? "Falha ao excluir usuário");
+  }
+}
