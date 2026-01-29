@@ -21,7 +21,6 @@ export default function NewOccurrencePage() {
   return (
     <LayoutContainer>
       <Stack spacing={isMobile ? 2 : 3} sx={{ width: "100%" }}>
-        {/* Content */}
         <Box
           sx={{
             width: "100%",
@@ -31,7 +30,6 @@ export default function NewOccurrencePage() {
             flexDirection: isMobile ? "column" : "row",
           }}
         >
-          {/* LEFT: Form card */}
           <Box
             sx={{
               width: "100%",
@@ -53,7 +51,6 @@ export default function NewOccurrencePage() {
             </Stack>
           </Box>
 
-          {/* RIGHT: Latest occurrences card */}
           <Box
             sx={{
               width: "100%",
@@ -82,7 +79,6 @@ export default function NewOccurrencePage() {
               </Typography>
               <Divider sx={{ opacity: 0.6 }} />
 
-              {/* Table needs to fill available space without overflowing */}
               <Box sx={{ flex: 1, minHeight: 0 }}>
                 <LatestOccurrencesTable />
               </Box>

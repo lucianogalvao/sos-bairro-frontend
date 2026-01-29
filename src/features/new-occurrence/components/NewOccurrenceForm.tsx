@@ -4,20 +4,25 @@ import * as React from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   Stack,
   TextField,
   Typography,
   MenuItem,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+
 import AddressAutocomplete from "./AddressAutocomplete";
 import { categoriesQueries } from "@/features/occurences/queries";
-import { OccurrenceCategory } from "@/features/dashboard/types";
-import { useRouter } from "next/navigation";
+import type { OccurrenceCategory } from "@/features/dashboard/types";
 
 type Geo = { lat: number; lng: number };
 
 export default function NewOccurrenceForm() {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const [description, setDescription] = React.useState("");
   const [categoryId, setCategoryId] = React.useState<number | "">("");
   const [address, setAddress] = React.useState("");
@@ -28,12 +33,15 @@ export default function NewOccurrenceForm() {
   const [file, setFile] = React.useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+
   const categoriesQuery = useQuery(categoriesQueries.categories());
   const categories = Array.isArray(categoriesQuery.data)
     ? categoriesQuery.data
     : categoriesQuery.data?.items;
+
   const categoriesSafe = Array.isArray(categories) ? categories : [];
-  const router = useRouter();
 
   React.useEffect(() => {
     if (!file) {
@@ -47,18 +55,24 @@ export default function NewOccurrenceForm() {
 
   async function onSubmit() {
     const apiBase = process.env.NEXT_PUBLIC_APP_URL;
+
+    setSubmitError(null);
+
     if (!apiBase) {
-      console.error("NEXT_PUBLIC_APP_URL não configurada");
+      setSubmitError("NEXT_PUBLIC_APP_URL não configurada");
       return;
     }
 
     if (!description || !categoryId) return;
+
     if (!geo?.lat || !geo?.lng || !address) {
-      console.error("Endereço/latitude/longitude são obrigatórios");
+      setSubmitError("Endereço/latitude/longitude são obrigatórios");
       return;
     }
 
     try {
+      setIsSubmitting(true);
+
       let finalImageUrl = imageUrl?.trim() || "";
 
       if (file) {
@@ -93,14 +107,12 @@ export default function NewOccurrenceForm() {
 
       const res = await fetch(`${apiBase}/api/occurrences/new`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
       if (!res.ok) {
         const msg =
@@ -109,11 +121,24 @@ export default function NewOccurrenceForm() {
         throw new Error(msg);
       }
 
-      router.push("/dashboard");
+      await queryClient.invalidateQueries({
+        queryKey: ["occurrences"],
+        exact: false,
+      });
+
+      router.push("/ocorrencias");
     } catch (e) {
+      setSubmitError(
+        e instanceof Error ? e.message : "Erro ao salvar ocorrência",
+      );
       console.error("Erro ao salvar ocorrência:", e);
+    } finally {
+      setIsSubmitting(false);
     }
   }
+
+  const canSubmit =
+    !!description && !!categoryId && !!geo && !!address && !isSubmitting;
 
   return (
     <Box>
@@ -129,6 +154,7 @@ export default function NewOccurrenceForm() {
           placeholder="Ex. Som alto"
           multiline
           minRows={3}
+          disabled={isSubmitting}
         />
 
         <TextField
@@ -140,7 +166,11 @@ export default function NewOccurrenceForm() {
             setCategoryId(v ? Number(v) : "");
           }}
           fullWidth
-          disabled={categoriesQuery.isLoading || categoriesQuery.isFetching}
+          disabled={
+            isSubmitting ||
+            categoriesQuery.isLoading ||
+            categoriesQuery.isFetching
+          }
         >
           <MenuItem value="" disabled>
             Selecione
@@ -156,10 +186,7 @@ export default function NewOccurrenceForm() {
         <AddressAutocomplete
           onPick={(data) => {
             setAddress(data.address);
-            setGeo({
-              lat: data.lat,
-              lng: data.lng,
-            });
+            setGeo({ lat: data.lat, lng: data.lng });
           }}
         />
 
@@ -172,10 +199,11 @@ export default function NewOccurrenceForm() {
             type="file"
             accept="image/*"
             capture="environment"
+            disabled={isSubmitting}
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
 
-          {previewUrl && (
+          {previewUrl ? (
             <Box
               component="img"
               src={previewUrl}
@@ -188,15 +216,26 @@ export default function NewOccurrenceForm() {
                 border: "1px solid rgba(255,255,255,0.12)",
               }}
             />
-          )}
+          ) : null}
         </Stack>
+
+        {submitError ? (
+          <Typography color="error" fontSize={13}>
+            {submitError}
+          </Typography>
+        ) : null}
 
         <Button
           variant="contained"
           onClick={onSubmit}
-          disabled={!description || !categoryId || !geo || !address}
+          disabled={!canSubmit}
+          startIcon={
+            isSubmitting ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : undefined
+          }
         >
-          Salvar ocorrência
+          {isSubmitting ? "Salvando..." : "Salvar ocorrência"}
         </Button>
       </Stack>
     </Box>

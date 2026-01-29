@@ -50,10 +50,10 @@ const navItems = [
     roles: ["ADMIN", "MODERADOR", "MORADOR"],
   },
   {
-    href: "/usuarios",
-    label: "Usuários",
+    href: "/painel-admin",
+    label: "Painel Admin",
     icon: <PeopleAltRoundedIcon sx={{ fontSize: ICON_SIZE }} />,
-    roles: ["ADMIN", "MODERADOR"],
+    roles: ["ADMIN"],
   },
 ];
 

@@ -29,16 +29,28 @@ type Services = {
 export default function AddressAutocomplete({
   onPick,
   label = "Endereço",
+  previousAddress,
 }: {
   onPick: (data: AddressPick) => void;
   label?: string;
+  previousAddress?: string;
 }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [value, setValue] = useState("");
+
+  // ✅ inicia com o endereço anterior (caso edição)
+  const [value, setValue] = useState(previousAddress ?? "");
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [open, setOpen] = useState(false);
   const [services, setServices] = useState<Services | null>(null);
 
+  // ✅ sincroniza quando trocar de ocorrência / abrir dialog novamente
+  useEffect(() => {
+    if (typeof previousAddress === "string") {
+      setValue(previousAddress);
+    }
+  }, [previousAddress]);
+
+  // inicializa serviços do Google Places
   useEffect(() => {
     if (window.google?.maps?.places) {
       setServices({
@@ -65,13 +77,14 @@ export default function AddressAutocomplete({
     return () => clearInterval(interval);
   }, []);
 
-  // debounce simples
+  // debounce simples para autocomplete
   useEffect(() => {
     if (!services) {
       setPredictions([]);
       setOpen(false);
       return;
     }
+
     if (!value.trim()) {
       setPredictions([]);
       setOpen(false);
@@ -82,7 +95,6 @@ export default function AddressAutocomplete({
       services.autocomplete.getPlacePredictions(
         {
           input: value,
-          // opcional: restringir ao BR
           componentRestrictions: { country: "br" },
           types: ["address"],
         },
@@ -93,6 +105,7 @@ export default function AddressAutocomplete({
                 place_id: p.place_id,
               }))
             : [];
+
           setPredictions(list);
           setOpen(list.length > 0);
         },
@@ -108,7 +121,6 @@ export default function AddressAutocomplete({
     services.places.getDetails(
       {
         placeId: p.place_id,
-        // campos necessários pra reduzir custo e payload
         fields: ["formatted_address", "geometry", "place_id"],
       },
       (place, status) => {
@@ -160,12 +172,12 @@ export default function AddressAutocomplete({
       {open ? (
         <Paper
           elevation={6}
-          style={{
+          sx={{
             position: "absolute",
             left: 0,
             right: 0,
             top: "100%",
-            marginTop: 8,
+            mt: 1,
             zIndex: 20,
             maxHeight: 280,
             overflow: "auto",
