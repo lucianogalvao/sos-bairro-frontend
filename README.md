@@ -1,7 +1,7 @@
 # SOS Bairro – Frontend
 
 **Desenvolvido por:**  
-**Luciano Galvão Jr**
+**Luciano Galvão Jr**  
 **Projeto para o TCC da Pós-Graduação de Desenvolvimento FullStack da PUC/RS**  
 [LinkedIn](https://www.linkedin.com/in/lucianogalvaao/) • [GitHub](https://github.com/LucianoGalvao)
 
