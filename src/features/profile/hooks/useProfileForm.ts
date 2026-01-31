@@ -13,6 +13,10 @@ function getInitials(name?: string | null) {
 }
 
 export function useProfileForm({ original }: { original: ProfileForm }) {
+  const isHydrating = React.useMemo(() => {
+    // ajuste conforme tua regra: aqui eu uso name/email como base
+    return !String(original?.email ?? "").trim();
+  }, [original]);
   const [form, setForm] = React.useState<ProfileForm>(original);
 
   const [isEditing, setIsEditing] = React.useState(false);
@@ -25,6 +29,8 @@ export function useProfileForm({ original }: { original: ProfileForm }) {
   const [avatarPreview, setAvatarPreview] = React.useState<string | null>(null);
 
   React.useEffect(() => {
+    if (isHydrating) return;
+
     setForm(original);
     setIsEditing(false);
     setIsSaving(false);
@@ -32,7 +38,7 @@ export function useProfileForm({ original }: { original: ProfileForm }) {
     setSuccess(null);
     setAvatarFile(null);
     setAvatarPreview(null);
-  }, [original]);
+  }, [original, isHydrating]);
 
   React.useEffect(() => {
     if (!avatarFile) {
@@ -96,5 +102,7 @@ export function useProfileForm({ original }: { original: ProfileForm }) {
     removeAvatar,
 
     canSave,
+
+    isHydrating,
   };
 }

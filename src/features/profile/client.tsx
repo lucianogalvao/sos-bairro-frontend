@@ -1,7 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Alert, Box, Divider, Paper, Stack, useTheme } from "@mui/material";
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Divider,
+  LinearProgress,
+  Paper,
+  Stack,
+  useTheme,
+} from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 
 import LayoutContainer from "../common/LayoutContainer";
@@ -72,6 +81,21 @@ export default function ProfileClient() {
     } finally {
       vm.setIsSaving(false);
     }
+  }
+
+  if (vm.isHydrating) {
+    return (
+      <LayoutContainer>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="80vh"
+        >
+          <CircularProgress size={80} />
+        </Box>
+      </LayoutContainer>
+    );
   }
 
   return (
