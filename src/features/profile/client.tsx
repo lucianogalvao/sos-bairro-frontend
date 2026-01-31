@@ -91,6 +91,7 @@ export default function ProfileClient() {
             <ProfileHeader
               name={vm.form.name}
               email={vm.form.email}
+              role={user?.role ?? ""}
               avatarSrc={vm.avatarSrc}
               isEditing={vm.isEditing}
               onEdit={vm.startEditing}
