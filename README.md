@@ -1,7 +1,8 @@
 # SOS Bairro – Frontend
 
 **Desenvolvido por:**  
-**Luciano Galvão Jr**  
+**Luciano Galvão Jr**
+**Projeto para o TCC da Pós-Graduação de Desenvolvimento FullStack da PUC/RS**  
 [LinkedIn](https://www.linkedin.com/in/lucianogalvaao/) • [GitHub](https://github.com/LucianoGalvao)
 
 ---
@@ -9,23 +10,6 @@
 ## 📌 Sobre o projeto
 
 O **SOS Bairro – Frontend** é a interface web da plataforma **SOS Bairro**, responsável por toda a experiência do usuário final.
-
-Este repositório **contém apenas o frontend**, incluindo:
-
-- Interface do usuário (Web)
-- BFF (Backend for Frontend) via rotas em `app/api`
-- Camada de apresentação e orquestração de dados
-
-Principais funcionalidades:
-
-- Registro e listagem de ocorrências
-- Acompanhamento e atualização de status
-- Upload e visualização de imagem
-- Autocomplete de endereço (Google Places)
-- Visualização de mapa (Google Maps)
-- Painel administrativo (usuários e categorias)
-- Perfil do usuário (edição e avatar)
-- Layout responsivo (mobile/desktop)
 
 ---
 
