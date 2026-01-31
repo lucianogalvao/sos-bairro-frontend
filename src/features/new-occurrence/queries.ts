@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchMyOccurrences } from "@/shared/api/occurrences";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type CreateOccurrencePayload = {
@@ -38,9 +39,16 @@ export function useCreateOccurrence() {
     mutationFn: (payload: CreateOccurrencePayload) => createOccurrence(payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["occurrences"],
+        queryKey: ["occurrences", "my-occurrences"],
         exact: false,
       });
     },
   });
 }
+
+export const myOccurrencesQueries = {
+  occurrences: () => ({
+    queryKey: ["my-occurrences"],
+    queryFn: fetchMyOccurrences,
+  }),
+};

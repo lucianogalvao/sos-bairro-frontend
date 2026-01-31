@@ -6,6 +6,14 @@ export async function fetchOccurrences() {
   return res.json();
 }
 
+export async function fetchMyOccurrences() {
+  const res = await fetch("/api/occurrences/my", {
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error("Falha ao carregar últimas ocorrências");
+  return res.json();
+}
+
 export async function createOccurrence(payload: CreateOccurrencePayload) {
   const res = await fetch("/api/occurrences", {
     method: "POST",

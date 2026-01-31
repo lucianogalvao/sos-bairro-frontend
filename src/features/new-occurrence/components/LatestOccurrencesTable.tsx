@@ -17,12 +17,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { occurrencesQueries } from "@/features/occurences/queries"; // ajuste o path se for outro
 import formatDatePtBR from "@/shared/utils/formatDatePtBR";
 import statusChipColor from "@/shared/utils/statusChipColor";
 import { OccurrenceStatus } from "@/features/dashboard/types";
+import { myOccurrencesQueries } from "../queries";
 
-// Ajuste se o seu type estiver em outro lugar:
 type Occurrence = {
   id: number;
   description: string;
@@ -38,9 +37,9 @@ export default function LatestOccurrencesTable() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const query = useQuery(occurrencesQueries.occurrences());
+  const query = useQuery(myOccurrencesQueries.occurrences());
 
-  const items = (query.data?.items ?? []) as Occurrence[];
+  const items = (query.data ?? []) as Occurrence[];
 
   const [orderBy, setOrderBy] = React.useState<SortKey>("createdAt");
   const [order, setOrder] = React.useState<Order>("desc");
