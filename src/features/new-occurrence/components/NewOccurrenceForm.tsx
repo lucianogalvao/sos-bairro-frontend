@@ -191,7 +191,6 @@ export default function NewOccurrenceForm() {
           <input
             type="file"
             accept="image/*"
-            capture="environment"
             disabled={isSubmitting}
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
